@@ -1518,16 +1518,6 @@
           <div class="header-controls">
             <div class="control-group">
               <button id="memory-icon-btn" class="btn btn-ghost btn-icon" title="Memory" style="font-size:1.2em;vertical-align:middle;">🧠</button>
-              <div id="memory-dropdown" style="display:none;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;padding:8px 12px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-                <select id="memory-range" title="Number of previous messages to include">
-                  <option value="0">Zero (0)</option>
-                  <option value="5">Low (5)</option>
-                  <option value="20">Medium (20)</option>
-                  <option value="50">High (50)</option>
-                  <option value="-1">Max (All messages)</option>
-                </select>
-                <span id="memory-value">Medium</span>
-              </div>
             </div>
           </div>
 
@@ -1734,6 +1724,74 @@
     <!-- Hidden file input for import -->
     <input type="file" id="import-file" accept=".json" class="hidden" />
 
+    <!-- Memory dialog modal -->
+    <div class="modal-overlay" id="memory-modal" style="display:none;">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>🧠 Memory Settings</h2>
+          <button class="modal-close" id="close-memory-modal" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="memory-range">Number of previous messages to include</label>
+            <select id="memory-range" style="width:100%;">
+              <option value="0">Zero (0)</option>
+              <option value="5">Low (5)</option>
+              <option value="20">Medium (20)</option>
+              <option value="50">High (50)</option>
+              <option value="-1">Max (All messages)</option>
+            </select>
+            <span id="memory-value">Medium</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="save-memory-settings">Save</button>
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="modules/main.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var memoryBtn = document.getElementById("memory-icon-btn");
+        var memoryModal = document.getElementById("memory-modal");
+        var closeMemoryModal = document.getElementById("close-memory-modal");
+        var saveMemorySettings = document.getElementById("save-memory-settings");
+        var memoryRange = document.getElementById("memory-range");
+        var memoryValue = document.getElementById("memory-value");
+        // Show modal on icon click
+        if (memoryBtn && memoryModal) {
+          memoryBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            memoryModal.style.display = "flex";
+          });
+        }
+        // Close modal
+        if (closeMemoryModal && memoryModal) {
+          closeMemoryModal.addEventListener("click", function() {
+            memoryModal.style.display = "none";
+          });
+        }
+        // Save and close
+        if (saveMemorySettings && memoryModal) {
+          saveMemorySettings.addEventListener("click", function() {
+            memoryModal.style.display = "none";
+          });
+        }
+        // Update label on change
+        if (memoryRange && memoryValue) {
+          memoryRange.addEventListener("change", function() {
+            var label = memoryRange.options[memoryRange.selectedIndex].text;
+            memoryValue.textContent = label.replace(/\(.*/, '').trim();
+          });
+        }
+        // Close modal on outside click
+        if (memoryModal) {
+          memoryModal.addEventListener("click", function(e) {
+            if (e.target === memoryModal) memoryModal.style.display = "none";
+          });
+        }
+      });
+    </script>
   </body>
 </html>
