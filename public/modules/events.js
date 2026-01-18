@@ -8,7 +8,7 @@ import { MAX_CHAR_COUNT, DEFAULT_SETTINGS } from "./constants.js";
 import { saveChats, saveSettings, createNewChat, getCurrentChat } from "./storage.js";
 import { showToast } from "./toast.js";
 import { toggleTheme } from "./theme.js";
-import { openModal, closeAllModals } from "./modal.js";
+import { openModal, closeModal, closeAllModals } from "./modal.js";
 import { exportChats, importChats } from "./export-import.js";
 import {
   renderChatList,
