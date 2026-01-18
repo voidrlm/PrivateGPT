@@ -234,7 +234,8 @@ export function updateUIFromSettings() {
 
   // Settings modal
   if (elements.systemPrompt) {
-    elements.systemPrompt.value = state.settings.systemPrompt;
+    const chat = getCurrentChat();
+    elements.systemPrompt.value = chat?.systemPrompt || state.settings.systemPrompt || "";
   }
   if (elements.defaultModel) {
     elements.defaultModel.value = state.settings.defaultModel;

@@ -225,6 +225,7 @@ function createNewChat(name = "New Chat") {
     createdAt: Date.now(),
     updatedAt: Date.now(),
     model: state.settings.defaultModel,
+    systemPrompt: state.settings?.systemPrompt || DEFAULT_SETTINGS.systemPrompt,
   };
 }
 
@@ -390,8 +391,10 @@ async function streamResponse(chat, userMessage) {
     ),
   };
 
-  if (state.settings.systemPrompt) {
-    payload.systemPrompt = state.settings.systemPrompt;
+  // Use per-chat system prompt if present, otherwise fall back to global setting
+  const systemPrompt = chat.systemPrompt || state.settings.systemPrompt;
+  if (systemPrompt) {
+    payload.systemPrompt = systemPrompt;
   }
 
   const response = await fetch("/api/chat", {
@@ -1114,7 +1117,17 @@ function setupEventListeners() {
   );
 
   elements.saveSettingsBtn?.addEventListener("click", () => {
-    state.settings.systemPrompt = elements.systemPrompt?.value || "";
+    // Save the system prompt on a per-chat basis. Other settings remain global.
+    const chat = getCurrentChat();
+    if (chat) {
+      chat.systemPrompt = elements.systemPrompt?.value || "";
+      chat.updatedAt = Date.now();
+      saveChats();
+    } else {
+      state.settings.systemPrompt = elements.systemPrompt?.value || "";
+      saveSettings();
+    }
+
     state.settings.defaultModel =
       elements.defaultModel?.value || DEFAULT_SETTINGS.defaultModel;
     state.settings.enableStreaming = elements.streamToggle?.checked ?? true;
