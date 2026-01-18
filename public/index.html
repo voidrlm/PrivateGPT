@@ -1517,15 +1517,17 @@
 
           <div class="header-controls">
             <div class="control-group">
-              <label for="memory-range">Memory</label>
-              <select id="memory-range" title="Number of previous messages to include">
-                <option value="0">Zero (0)</option>
-                <option value="5">Low (5)</option>
-                <option value="20">Medium (20)</option>
-                <option value="50">High (50)</option>
-                <option value="-1">Max (All messages)</option>
-              </select>
-              <span id="memory-value">Medium</span>
+              <button id="memory-icon-btn" class="btn btn-ghost btn-icon" title="Memory" style="font-size:1.2em;vertical-align:middle;">🧠</button>
+              <div id="memory-dropdown" style="display:none;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;padding:8px 12px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                <select id="memory-range" title="Number of previous messages to include">
+                  <option value="0">Zero (0)</option>
+                  <option value="5">Low (5)</option>
+                  <option value="20">Medium (20)</option>
+                  <option value="50">High (50)</option>
+                  <option value="-1">Max (All messages)</option>
+                </select>
+                <span id="memory-value">Medium</span>
+              </div>
             </div>
           </div>
 

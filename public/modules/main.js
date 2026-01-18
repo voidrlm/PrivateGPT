@@ -51,6 +51,24 @@ function init() {
   updateUIFromSettings();
   checkConnection();
 
+  // Memory icon dropdown logic
+  const memoryBtn = document.getElementById("memory-icon-btn");
+  const memoryDropdown = document.getElementById("memory-dropdown");
+  if (memoryBtn && memoryDropdown) {
+    memoryBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const rect = memoryBtn.getBoundingClientRect();
+      memoryDropdown.style.display = memoryDropdown.style.display === "none" ? "block" : "none";
+      memoryDropdown.style.left = rect.left + "px";
+      memoryDropdown.style.top = rect.bottom + 4 + "px";
+    });
+    document.addEventListener("click", (e) => {
+      if (!memoryDropdown.contains(e.target) && e.target !== memoryBtn) {
+        memoryDropdown.style.display = "none";
+      }
+    });
+  }
+
   // Focus input on load
   setTimeout(() => elements.userInput?.focus(), 100);
 
