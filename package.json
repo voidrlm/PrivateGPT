@@ -6,13 +6,11 @@
 		"typescript": "5.9.3",
 		"vitest": "3.2.4"
 	},
-	"dependencies": {
-		"express": "^4.18.2"
-	},
+	"dependencies": {},
 	"private": true,
 	"scripts": {
-		"start": "node server.js",
-		"dev": "node server.js",
+		"start": "npx serve public",
+		"dev": "npx serve public",
 		"test": "vitest"
 	}
 }
