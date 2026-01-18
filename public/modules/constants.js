@@ -18,7 +18,7 @@ export const DEFAULT_SETTINGS = {
 };
 
 // URL for local Ollama instance. Override by setting `window.OLLAMA_URL`
-export const OLLAMA_URL = window?.OLLAMA_URL || "http://localhost:11434";
+export const OLLAMA_URL = window?.OLLAMA_URL;
 
 export const SUGGESTIONS = [
   "Explain quantum computing simply",

@@ -86,35 +86,51 @@ export async function fetchModels() {
   // First try to load a generated local `models.json` (created by the
   // `npm run ollama:models` script that calls the Ollama CLI). If not
   // present, fall back to the Ollama local HTTP API.
+  let models = [];
   try {
     const localResp = await fetch('models.json');
     if (localResp.ok) {
-      const models = await localResp.json();
-      populateModelSelects(models);
-      return models;
+      models = await localResp.json();
     }
   } catch (e) {
     // ignore and fall back
   }
 
-  try {
-    const resp = await fetch(`${OLLAMA_URL}/api/models`);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const data = await resp.json();
-
-    let models = [];
-    if (Array.isArray(data)) {
-      models = data.map((m) => m.name || m.model || m.id || m);
-    } else if (Array.isArray(data.models)) {
-      models = data.models.map((m) => m.name || m.model || m.id || m);
+  if (!models || models.length === 0) {
+    try {
+      const resp = await fetch(`${OLLAMA_URL}/api/models`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      if (Array.isArray(data)) {
+        models = data.map((m) => m.name || m.model || m.id || m);
+      } else if (Array.isArray(data.models)) {
+        models = data.models.map((m) => m.name || m.model || m.id || m);
+      }
+    } catch (e) {
+      console.warn("Failed to fetch models from Ollama HTTP API:", e);
     }
-
-    populateModelSelects(models);
-    return models;
-  } catch (e) {
-    console.warn("Failed to fetch models from Ollama HTTP API:", e);
-    return [];
   }
+
+  populateModelSelects(models);
+
+  // If no model is selected, select the first available
+  if (models && models.length > 0) {
+    if (!state.settings.defaultModel) {
+      state.settings.defaultModel = models[0];
+    }
+    if (elements.modelSelect && !elements.modelSelect.value) {
+      elements.modelSelect.value = models[0];
+    }
+    if (elements.defaultModel && !elements.defaultModel.value) {
+      elements.defaultModel.value = models[0];
+    }
+  } else {
+    // No models available, show alert/toast
+    showToast("No models found. Please install Ollama and download a model.", "error");
+    alert("No models found. Please install Ollama (https://ollama.com/download) and download a model (e.g., 'ollama run llama2').");
+  }
+
+  return models;
 }
 
 function populateModelSelects(models) {
