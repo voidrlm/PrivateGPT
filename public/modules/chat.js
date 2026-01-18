@@ -207,11 +207,18 @@ async function streamResponse(chat, userMessage) {
       : chat.messages.slice(-memoryWindow);
 
   // Add system prompt if configured
-  const modelId = state.settings.defaultModel || DEFAULT_SETTINGS.defaultModel;
+  const modelId = chat.model || elements.modelSelect?.value || state.settings.defaultModel || DEFAULT_SETTINGS.defaultModel;
 
-  const prompt = messagesToSend
+  const systemPrompt = chat.systemPrompt || state.settings.systemPrompt;
+
+  let prompt = messagesToSend
     .map((m) => `${m.role.toUpperCase()}:\n${m.content}`)
     .join("\n\n");
+
+  if (systemPrompt) {
+    // Prepend system prompt to the conversation prompt so Ollama receives it.
+    prompt = `SYSTEM:\n${systemPrompt}\n\n` + prompt;
+  }
 
   const body = { model: modelId, prompt, stream: true };
 

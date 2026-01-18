@@ -87,6 +87,7 @@ export function createNewChat(name = "New Chat") {
     createdAt: Date.now(),
     updatedAt: Date.now(),
     model: state.settings.defaultModel,
+    systemPrompt: state.settings?.systemPrompt || DEFAULT_SETTINGS.systemPrompt,
   };
 }
 
