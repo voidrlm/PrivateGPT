@@ -3,10 +3,11 @@
 	"description": "A simple local LLM chat application (uses Ollama)",
 	"devDependencies": {
 		"@types/node": "24.10.1",
+		"electron": "^40.0.0",
 		"typescript": "5.9.3",
 		"vitest": "3.2.4"
 	},
-	"dependencies": {},
+	"main": "electron/main.js",
 	"private": true,
 	"scripts": {
 		"start": "npx serve public",
