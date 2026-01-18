@@ -1,5 +1,14 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const { execSync } = require('child_process');
+
+// Update models.json before launching the UI
+try {
+  execSync('node ' + path.join(__dirname, '../scripts/fetch-ollama-models.js'), { stdio: 'inherit' });
+  console.log('models.json updated successfully.');
+} catch (err) {
+  console.error('Failed to update models.json:', err);
+}
 
 function createWindow() {
   const win = new BrowserWindow({

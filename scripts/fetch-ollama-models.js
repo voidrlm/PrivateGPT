@@ -31,14 +31,12 @@ function runCommand(cmd) {
       continue;
     }
 
-    // Parse lines for model names
-    const lines = out.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-    // Heuristic: lines that look like a model identifier (no spaces) or lines with name after colon
+    // Parse lines for model names, skip header if present
+    let lines = out.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    if (lines[0] && /^name[:\s]?$/i.test(lines[0])) lines = lines.slice(1);
     const models = lines.map((l) => {
       const parts = l.split(/\s+/);
-      // If single token, return it
       if (parts.length === 1) return parts[0];
-      // If line like 'name: value' or 'model-name  description', take first token
       return parts[0];
     }).filter(Boolean);
 
