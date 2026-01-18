@@ -44,6 +44,27 @@ Browsers may block direct requests to Ollama's HTTP API due to CORS. Preferred w
 - `npm run ollama:models` — generate `public/models.json` from local Ollama.
 - `npx serve public` — serve the frontend for local testing.
 
+- `npm run electron:dev` — run the app inside Electron for a desktop-like experience.
+
+### Electron notes
+
+- The repository includes a minimal Electron entry at `electron/main.js` and a `preload.js`.
+- To run Electron locally install it as a dev dependency (already present in `devDependencies`) or run:
+
+```bash
+npm install --save-dev electron
+```
+
+- Then start Electron:
+
+```bash
+npm run electron:dev
+```
+
+- Electron loads `public/index.html` directly, which avoids browser CORS restrictions when calling the local Ollama HTTP API. If you see missing assets, ensure `public/` is present and `npm run ollama:models` has been run (for model list).
+
+- For packaging into a desktop app, consider adding `electron-builder` or `electron-forge`. I can add a packaging pipeline if you want.
+
 ## Troubleshooting
 
 - If you see JSON fragments in the chat UI, ensure Ollama is running locally and that the frontend's `public/modules/chat.js` contains the latest stream-parsing fixes.
