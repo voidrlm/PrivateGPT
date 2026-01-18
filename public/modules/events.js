@@ -5,7 +5,7 @@
 import { state } from "./state.js";
 import { elements } from "./elements.js";
 import { MAX_CHAR_COUNT, DEFAULT_SETTINGS } from "./constants.js";
-import { saveChats, saveSettings, createNewChat } from "./storage.js";
+import { saveChats, saveSettings, createNewChat, getCurrentChat } from "./storage.js";
 import { showToast } from "./toast.js";
 import { toggleTheme } from "./theme.js";
 import { openModal, closeAllModals } from "./modal.js";
@@ -98,15 +98,28 @@ export function setupEventListeners() {
   elements.importFile?.addEventListener("change", importChats);
 
   // Settings
-  elements.settingsBtn?.addEventListener("click", () =>
-    openModal("settings-modal")
-  );
+  elements.settingsBtn?.addEventListener("click", () => {
+    // ensure modal inputs reflect the current chat's prompt (if any)
+    updateUIFromSettings();
+    openModal("settings-modal");
+  });
   elements.shortcutsBtn?.addEventListener("click", () =>
     openModal("shortcuts-modal")
   );
 
   elements.saveSettingsBtn?.addEventListener("click", () => {
-    state.settings.systemPrompt = elements.systemPrompt?.value || "";
+    // Save system prompt to the current chat if present; otherwise save globally
+    const chat = getCurrentChat();
+    const promptVal = elements.systemPrompt?.value || "";
+    if (chat) {
+      chat.systemPrompt = promptVal;
+      chat.updatedAt = Date.now();
+      saveChats();
+    } else {
+      state.settings.systemPrompt = promptVal;
+      saveSettings();
+    }
+
     state.settings.defaultModel =
       elements.defaultModel?.value || DEFAULT_SETTINGS.defaultModel;
     state.settings.enableStreaming = elements.streamToggle?.checked ?? true;
