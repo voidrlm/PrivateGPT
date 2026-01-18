@@ -259,6 +259,8 @@ export function updateMemoryDisplay() {
   if (Number.isNaN(numeric)) numeric = 20;
   if (numeric === -1) {
     display = "Max";
+  } else if (numeric === 0) {
+    display = "Zero";
   } else if (numeric === 5) {
     display = "Low";
   } else if (numeric === 20) {

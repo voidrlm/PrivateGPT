@@ -201,10 +201,15 @@ async function streamResponse(chat, userMessage) {
 
   // Prepare messages payload
   const memoryWindow = state.settings.memoryWindow;
-  const messagesToSend =
-    memoryWindow === 0
-      ? chat.messages.slice(-1)
-      : chat.messages.slice(-memoryWindow);
+  let messagesToSend;
+  if (memoryWindow === -1) {
+    messagesToSend = chat.messages;
+  } else if (memoryWindow === 0) {
+    messagesToSend = chat.messages.slice(-1);
+  } else {
+    const n = Math.max(1, Number(memoryWindow) || 1);
+    messagesToSend = chat.messages.slice(-n);
+  }
 
   // Add system prompt if configured
   const modelId = chat.model || elements.modelSelect?.value || state.settings.defaultModel || DEFAULT_SETTINGS.defaultModel;

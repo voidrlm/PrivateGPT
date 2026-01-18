@@ -62,7 +62,7 @@ export function setupEventListeners() {
   });
 
   // Controls
-  elements.memoryRange?.addEventListener("input", () => {
+  elements.memoryRange?.addEventListener("change", () => {
     updateMemoryDisplay();
     saveSettings();
   });
