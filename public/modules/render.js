@@ -252,11 +252,25 @@ export function updateUIFromSettings() {
 }
 
 export function updateMemoryDisplay() {
-  const value = elements.memoryRange?.value || 20;
-  if (elements.memoryValue) {
-    elements.memoryValue.textContent = value;
+  const raw = elements.memoryRange?.value;
+  const value = raw !== undefined && raw !== null ? raw : String(20);
+  let display = value;
+  let numeric = Number(value);
+  if (Number.isNaN(numeric)) numeric = 20;
+  if (numeric === -1) {
+    display = "Max";
+  } else if (numeric === 5) {
+    display = "Low";
+  } else if (numeric === 20) {
+    display = "Medium";
+  } else if (numeric === 50) {
+    display = "High";
   }
-  state.settings.memoryWindow = Number(value);
+
+  if (elements.memoryValue) {
+    elements.memoryValue.textContent = display;
+  }
+  state.settings.memoryWindow = numeric;
 }
 
 export function updateProcessingUI(isProcessing) {

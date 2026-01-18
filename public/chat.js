@@ -377,10 +377,18 @@ async function streamResponse(chat, userMessage) {
 
   // Prepare messages payload
   const memoryWindow = state.settings.memoryWindow;
-  const messagesToSend =
-    memoryWindow === 0
-      ? chat.messages.slice(-1)
-      : chat.messages.slice(-memoryWindow);
+  let messagesToSend;
+  if (memoryWindow === -1) {
+    // Max: use all messages
+    messagesToSend = chat.messages;
+  } else if (memoryWindow === 0) {
+    // 0 means only the last user message
+    messagesToSend = chat.messages.slice(-1);
+  } else {
+    // use the last N messages (ensure at least 1)
+    const n = Math.max(1, Number(memoryWindow) || 1);
+    messagesToSend = chat.messages.slice(-n);
+  }
 
   // Add system prompt if configured
   const payload = {
