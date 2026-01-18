@@ -34,11 +34,13 @@ function runCommand(cmd) {
     // Parse lines for model names, skip header if present
     let lines = out.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
     if (lines[0] && /^name[:\s]?$/i.test(lines[0])) lines = lines.slice(1);
-    const models = lines.map((l) => {
+    let models = lines.map((l) => {
       const parts = l.split(/\s+/);
       if (parts.length === 1) return parts[0];
       return parts[0];
     }).filter(Boolean);
+    // Remove any lingering 'NAME' entries (case-insensitive)
+    models = models.filter(m => m.toLowerCase() !== 'name');
 
     if (models.length === 0) {
       console.log('no models parsed');
