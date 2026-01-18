@@ -541,6 +541,7 @@
         background: var(--panel-secondary);
         border-radius: var(--radius);
         font-size: 0.85rem;
+        position: relative;
       }
 
       .control-group label {
@@ -558,6 +559,14 @@
         cursor: pointer;
         outline: none;
         max-width: 150px;
+        appearance: menulist;
+        -webkit-appearance: menulist;
+        z-index: 1000;
+      }
+
+      .control-group select option {
+        color: var(--text);
+        background: var(--panel);
       }
 
       .control-group input[type="range"] {
