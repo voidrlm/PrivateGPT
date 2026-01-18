@@ -11,6 +11,7 @@
 	"scripts": {
 		"start": "npx serve public",
 		"dev": "npx serve public",
-		"test": "vitest"
+		"test": "vitest",
+		"ollama:models": "node scripts/fetch-ollama-models.js"
 	}
 }
